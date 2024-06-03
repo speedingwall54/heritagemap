@@ -11,10 +11,22 @@
       padding: 0;
       height: 100%;
       font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      display: flex;
+      height: 80%;
     }
     #map {
-      width: 100%;
-      height: 80%;
+      width: 50%;
+      height: 100%;
+    }
+    .form-container {
+      width: 50%;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
     }
     .nav-container {
       margin: 20px;
@@ -44,9 +56,6 @@
       font-size: 1.2em;
       font-weight: bold;
     }
-    .form-container {
-      margin: 20px;
-    }
     input[type="text"], select {
       width: 100%;
       padding: 10px;
@@ -71,19 +80,6 @@
   </style>
 </head>
 <body>
-<div class="form-container">
-  <h2>Enter Your Heritage Information</h2>
-  <form id="heritageForm">
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" name="lastName" required><br>
-    <label for="gothra">Gothra:</label>
-    <input type="text" id="gothra" name="gothra" required><br>
-    <label for="placeOfOrigin">Place of Family Origin:</label>
-    <input type="text" id="placeOfOrigin" name="placeOfOrigin" required><br>
-    <button type="button" class="search-button" onclick="submitHeritageInfo()">Submit</button>
-  </form>
-</div>
-
 <div class="nav-container">
   <button id="temples-button" class="nav-button active" onclick="showMarkers('temples')">Temples</button>
   <button id="villages-button" class="nav-button" onclick="showMarkers('villages')">Villages</button>
@@ -92,7 +88,21 @@
 <div class="state-teller">
   Current State: <span id="current-state">Temples</span>
 </div>
-<div id="map"></div>
+<div class="container">
+  <div id="map"></div>
+  <div class="form-container">
+    <h2>Enter Your Heritage Information</h2>
+    <form id="heritageForm">
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" required><br>
+      <label for="gothra">Gothra:</label>
+      <input type="text" id="gothra" name="gothra" required><br>
+      <label for="placeOfOrigin">Place of Family Origin:</label>
+      <input type="text" id="placeOfOrigin" name="placeOfOrigin" required><br>
+      <button type="button" class="search-button" onclick="submitHeritageInfo()">Submit</button>
+    </form>
+  </div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
@@ -167,4 +177,3 @@
 </script>
 </body>
 </html>
-
