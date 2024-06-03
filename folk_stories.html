@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Folk Stories</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    textarea {
+      width: 100%;
+      height: 300px;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<h1>Folk Stories</h1>
+<textarea id="folkStoriesContent" placeholder="Enter folk stories here..."></textarea>
+<button onclick="saveContent()">Save</button>
+
+<script>
+  function saveContent() {
+    const content = document.getElementById('folkStoriesContent').value;
+    localStorage.setItem('folkStoriesContent', content);
+    alert('Content saved!');
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const savedContent = localStorage.getItem('folkStoriesContent');
+    if (savedContent) {
+      document.getElementById('folkStoriesContent').value = savedContent;
+    }
+  });
+</script>
+</body>
+</html>
