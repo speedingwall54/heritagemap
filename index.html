@@ -73,9 +73,9 @@
 <body>
 <div class="header">Indian Heritage Map</div>
 <div class="nav-container">
-  <button id="temples-button" class="nav-button" onclick="showMarkers('temples')">Temples</button>
-  <button id="villages-button" class="nav-button" onclick="showMarkers('villages')">Villages</button>
-  <button id="families-button" class="nav-button" onclick="showMarkers('families')">Families</button>
+  <button id="temples-button" class="nav-button" onclick="setMode('temples')">Temples</button>
+  <button id="villages-button" class="nav-button" onclick="setMode('villages')">Villages</button>
+  <button id="families-button" class="nav-button" onclick="setMode('families')">Families</button>
 </div>
 <div class="container">
   <div id="map"></div>
@@ -100,6 +100,8 @@
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     let markers = [];
+    let currentMode = 'temples';
+    let formSubmitted = false;
 
     function addMarker(lat, lng, title, wikiUrl, folkStoriesUrl, languagesUrl, funFactsUrl, imagesUrl) {
       const popupContent = `
@@ -129,12 +131,21 @@
       document.getElementById(`${activeType}-button`).classList.add('active');
     }
 
-    window.showMarkers = function(type) {
-      clearMarkers();
+    window.setMode = function(type) {
+      currentMode = type;
       updateNavState(type);
+      clearMarkers();
 
       // Reset map to the default view of India
       map.setView([20.5937, 78.9629], 5);
+
+      if (formSubmitted) {
+        showMarkers(type);
+      }
+    }
+
+    window.showMarkers = function(type) {
+      clearMarkers();
 
       if (type === 'temples') {
         addMarker(12.9716, 77.5946, 'Sri Chennakesava Temple', 'https://en.wikipedia.org/wiki/Chennakesava_Temple,_Belur', 'folk_stories.html?temple=Chennakesava_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Chennakesava_Temple', 'https://www.example.com/images/Chennakesava_Temple');
@@ -150,29 +161,20 @@
       }
     }
 
-    window.showOnMap = function(lat, lng) {
-      map.setView([lat, lng], 15, {
-        animate: true,
-        duration: 1.5 // smooth transition
-      });
-    }
+    window.submitHeritageInfo = function() {
+      const lastName = document.getElementById('lastName').value;
+      const gothra = document.getElementById('gothra').value;
+      const placeOfOrigin = document.getElementById('placeOfOrigin').value;
 
-    // Initial state without showing any markers
-    clearMarkers();
+      // Show markers only when all inputs are provided
+      if (lastName && gothra && placeOfOrigin) {
+        formSubmitted = true;
+        showMarkers(currentMode);
+      } else {
+        alert('Please fill in all three inputs before submitting.');
+      }
+    }
   });
-
-  function submitHeritageInfo() {
-    const lastName = document.getElementById('lastName').value;
-    const gothra = document.getElementById('gothra').value;
-    const placeOfOrigin = document.getElementById('placeOfOrigin').value;
-
-    // Show markers only when all inputs are provided
-    if (lastName && gothra && placeOfOrigin) {
-      showMarkers('temples');
-    } else {
-      alert('Please fill in all three inputs before submitting.');
-    }
-  }
 </script>
 </body>
 </html>
