@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heritage Map of India</title>
+  <title>KrishnaTheeram</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <style>
     body, html {
@@ -11,63 +11,100 @@
       padding: 0;
       height: 100%;
       font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+    .banner {
+      width: 100%;
+      height: 300px;
+      background: url('https://www.jetsetter.com//uploads/sites/7/2018/04/s0i_qgfG-1380x690.jpeg') no-repeat center center/cover;
+      position: relative;
       display: flex;
       flex-direction: column;
-    }
-    .header {
+      justify-content: center;
+      align-items: center;
+      color: #fff;
       text-align: center;
-      font-size: 2em;
-      color: #333;
-      padding: 20px;
-      background-color: #f4f4f4;
+    }
+    .banner-summary {
+      background-color: rgba(0, 0, 0, 0.5); /* Black color with reduced opacity */
+      filter: grayscale(90%); /* Reduce saturation */
+    }
+
+
+    .banner-text {
+      font-size: 3em;
+      z-index: 1;
+    }
+    .banner-summary {
+      font-size: 1.5em;
+      margin-top: 10px;
     }
     .nav-container {
       display: flex;
-      justify-content: space-around;
-      background-color: #ddd;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.7);
       padding: 10px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
     .nav-container button {
-      padding: 10px;
+      padding: 10px 20px;
       cursor: pointer;
       background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border: none;
+      border-radius: 20px;
+      margin: 0 10px;
+      font-size: 1em;
+      transition: background-color 0.3s, color 0.3s;
     }
-    .nav-container button.active {
+    .nav-container button.active, .nav-container button:hover {
       background-color: #4CAF50;
       color: #fff;
     }
     .container {
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
+      align-items: center;
+      padding: 20px;
+      margin-top: 50px;
     }
     #map {
-      flex: 1;
       width: 100%;
+      height: 500px;
+      border-radius: 20px;
+      margin-top: 20px;
     }
     .form-container {
+      width: 100%;
+      max-width: 400px;
       padding: 20px;
       box-sizing: border-box;
-      overflow-y: auto;
-      background-color: #f9f9f9;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      margin-top: 20px;
     }
     input[type="text"] {
-      width: 100%;
+      width: calc(100% - 20px);
       padding: 10px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 10px;
     }
     button.search-button {
-      width: 100%;
+      width: calc(100% - 20px);
       padding: 10px;
       background-color: #4CAF50;
       color: #fff;
       border: none;
-      border-radius: 4px;
+      border-radius: 10px;
       cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    button.search-button:hover {
+      background-color: #45a049;
     }
     @media (min-width: 768px) {
       .container {
@@ -75,119 +112,138 @@
       }
       #map {
         width: 70%;
-        height: 100%;
+        margin-top: 0;
+        height: 400px;
       }
       .form-container {
-        width: 30%;
+        margin-left: 20px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="header">Indian Heritage Map</div>
-  <div class="nav-container">
-    <button id="temples-button" class="nav-button" onclick="setMode('temples')">Temples</button>
-    <button id="villages-button" class="nav-button" onclick="setMode('villages')">Villages</button>
-    <button id="families-button" class="nav-button" onclick="setMode('families')">Families</button>
+<div class="banner">
+  <div class="banner-text"><strong> KrishnaTheeram </strong></div>
+  <div class="banner-summary highlight"><strong>Discover your Indian roots through an interactive map showcasing temples, villages, and families.</strong></div>
+</div>
+<div class="nav-container">
+  <button id="temples-button" class="nav-button" data-mode="temples" onclick="setMode('temples')">Temples</button>
+  <button id="villages-button" class="nav-button" data-mode="villages" onclick="setMode('villages')">Villages</button>
+  <button id="families-button" class="nav-button" data-mode="families" onclick="setMode('families')">Families</button>
+</div>
+<div class="container">
+  <div id="map"></div>
+  <div class="form-container">
+    <h2>Enter Your Heritage Information</h2>
+    <form id="heritageForm">
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" required>
+      <label for="gothra">Gothra:</label>
+      <input type="text" id="gothra" name="gothra" required>
+      <label for="placeOfOrigin">Place of Family Origin:</label>
+      <input type="text" id="placeOfOrigin" name="placeOfOrigin" required>
+      <button type="button" class="search-button" onclick="submitHeritageInfo()">Submit</button>
+    </form>
   </div>
-  <div class="container">
-    <div id="map"></div>
-    <div class="form-container">
-      <h2>Enter Your Heritage Information</h2>
-      <form id="heritageForm">
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" required>
-        <label for="gothra">Gothra:</label>
-        <input type="text" id="gothra" name="gothra" required>
-        <label for="placeOfOrigin">Place of Family Origin:</label>
-        <input type="text" id="placeOfOrigin" name="placeOfOrigin" required>
-        <button type="button" class="search-button" onclick="submitHeritageInfo()">Submit</button>
-      </form>
-    </div>
-  </div>
-  
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const map = L.map('map').setView([20.5937, 78.9629], 5); // Default view at the center of India
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+</div>
 
-      let markers = [];
-      let currentMode = 'temples';
-      let formSubmitted = false;
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Initialize map
+    const map = L.map('map').setView([20.5937, 78.9629], 5); // Default view at the center of India
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-      function addMarker(lat, lng, title, wikiUrl, folkStoriesUrl, languagesUrl, funFactsUrl, imagesUrl) {
-        const popupContent = `
-          <b>${title}</b><br>
-          <a href="${wikiUrl}" target="_blank">Wikipedia Page</a><br>
-          <a href="${folkStoriesUrl}" target="_blank">Folk Stories</a><br>
-          <a href="${languagesUrl}" target="_blank">Common Languages</a><br>
-          <a href="${funFactsUrl}" target="_blank">Fun Facts</a><br>
-          <a href="${imagesUrl}" target="_blank">Images</a>
-        `;
-        const marker = L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
-        markers.push(marker);
+    // Global variables
+    let markers = [];
+    let currentMode = '';
+    let formSubmitted = false;
+
+    // Function to add marker
+    function addMarker(lat, lng, title, wikiUrl, folkStoriesUrl, languagesUrl, funFactsUrl, imagesUrl) {
+      const popupContent = `
+            <b>${title}</b><br>
+            <a href="${wikiUrl}" target="_blank">Wikipedia Page</a><br>
+            <a href="${folkStoriesUrl}" target="_blank">Folk Stories</a><br>
+            <a href="${languagesUrl}" target="_blank">Common Languages</a><br>
+            <a href="${funFactsUrl}" target="_blank">Fun Facts</a><br>
+            <a href="${imagesUrl}" target="_blank">Images</a>
+          `;
+      const marker = L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
+      markers.push(marker);
+    }
+
+    // Function to clear markers
+    function clearMarkers() {
+      markers.forEach(marker => {
+        map.removeLayer(marker);
+      });
+      markers = [];
+    }    // Function to update navigation state
+    function updateNavState(activeType) {
+      const navButtons = document.querySelectorAll('.nav-button');
+      navButtons.forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById(`${activeType}-button`).classList.add('active');
+    }
+
+    // Set mode function
+    window.setMode = function(type) {
+      currentMode = type;
+      updateNavState(type);
+      clearMarkers();
+      // Reset map to the default view of India
+      map.setView([20.5937, 78.9629], 5);
+
+      if (formSubmitted) {
+        showMarkers(type);
       }
+    }
 
-      function clearMarkers() {
-        markers.forEach(marker => {
-          map.removeLayer(marker);
-        });
-        markers = [];
+    // Show markers function
+    window.showMarkers = function(type) {
+      clearMarkers();
+      if (type === 'temples') {
+        // Add markers for temples
+        addMarker(12.9716, 77.5946, 'Sri Chennakesava Temple', 'https://en.wikipedia.org/wiki/Chennakesava_Temple,_Belur', 'folk_stories.html?temple=Chennakesava_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Chennakesava_Temple', 'https://www.example.com/images/Chennakesava_Temple');
+        addMarker(13.0827, 80.2707, 'Kapaleeshwarar Temple', 'https://en.wikipedia.org/wiki/Kapaleeshwarar_Temple', 'folk_stories.html?temple=Kapaleeshwarar_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?temple=Kapaleeshwarar_Temple', 'https://www.example.com/images/Kapaleeshwarar_Temple');
+        addMarker(15.3173, 75.7139, 'Virupaksha Temple', 'https://en.wikipedia.org/wiki/Virupaksha_Temple', 'folk_stories.html?temple=Virupaksha_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Virupaksha_Temple', 'https://www.example.com/images/Virupaksha_Temple');
+        addMarker(16.5000, 80.6400, 'Simhachalam Temple', 'https://en.wikipedia.org/wiki/Simhachalam_Temple', 'folk_stories.html?temple=Simhachalam_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?temple=Simhachalam_Temple', 'https://www.example.com/images/Simhachalam_Temple');
+      } else if (type === 'villages') {
+        // Add markers for villages
+        addMarker(16.3908, 78.4416, 'Kuchipudi', 'https://en.wikipedia.org/wiki/Kuchipudi', 'folk_stories.html?village=Kuchipudi', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?village=Kuchipudi', 'https://www.example.com/images/Kuchipudi');
+        addMarker(15.8281, 78.0373, 'Srisailam', 'https://en.wikipedia.org/wiki/Srisailam', 'folk_stories.html?village=Srisailam', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?village=Srisailam', 'https://www.example.com/images/Srisailam');
+        addMarker(11.4100, 76.6953, 'Ooty', 'https://en.wikipedia.org/wiki/Ooty', 'folk_stories.html?village=Ooty', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?village=Ooty', 'https://www.example.com/images/Ooty');
+        addMarker(11.4064, 76.6932, 'Coonoor', 'https://en.wikipedia.org/wiki/Coonoor', 'folk_stories.html?village=Coonoor', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?village=Coonoor', 'https://www.example.com/images/Coonoor');
+      } else if (type === 'families') {
+        // Add markers for families
+        addMarker(10.8505, 76.2711, 'Family 1', 'https://en.wikipedia.org/wiki/Family_1', 'achievements.html?family=Family_1', 'https://en.wikipedia.org/wiki/Languages_of_Kerala', 'fun_facts.html?family=Family_1', 'https://www.example.com/images/Family_1');
+        addMarker(11.0168, 76.9558, 'Family 2', 'https://en.wikipedia.org/wiki/Family_2', 'achievements.html?family=Family_2', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?family=Family_2', 'https://www.example.com/images/Family_2');
       }
+    }
 
-      function updateNavState(activeType) {
-        const navButtons = document.querySelectorAll('.nav-button');
-        navButtons.forEach(button => {
-          button.classList.remove('active');
-        });
-        document.getElementById(`${activeType}-button`).classList.add('active');
-      }
+    // Function to submit heritage information
+    window.submitHeritageInfo = function() {
+      const lastName = document.getElementById('lastName').value;
+      const gothra = document.getElementById('gothra').value;
+      const placeOfOrigin = document.getElementById('placeOfOrigin').value;
 
-      window.setMode = function(type) {
-        currentMode = type;
-        updateNavState(type);
-        clearMarkers();
-
-        // Reset map to the default view of India
-        map.setView([20.5937, 78.9629], 5);
-
-        if (formSubmitted) {
-          showMarkers(type);
-        }
-      }
-
-      window.showMarkers = function(type) {
-        clearMarkers();
-
-        if (type === 'temples') {
-          addMarker(12.9716, 77.5946, 'Sri Chennakesava Temple', 'https://en.wikipedia.org/wiki/Chennakesava_Temple,_Belur', 'folk_stories.html?temple=Chennakesava_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Chennakesava_Temple', 'https://www.example.com/images/Chennakesava_Temple');
-          addMarker(13.0827, 80.2707, 'Kapaleeshwarar Temple', 'https://en.wikipedia.org/wiki/Kapaleeshwarar_Temple', 'folk_stories.html?temple=Kapaleeshwarar_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?temple=Kapaleeshwarar_Temple', 'https://www.example.com/images/Kapaleeshwarar_Temple');
-          addMarker(15.3173, 75.7139, 'Virupaksha Temple', 'https://en.wikipedia.org/wiki/Virupaksha_Temple', 'folk_stories.html?temple=Virupaksha_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Virupaksha_Temple', 'https://www.example.com/images/Virupaksha_Temple');
-          addMarker(16.5000, 80.6400, 'Unknown Temple', 'https://en.wikipedia.org/wiki/Special:CreatePage?title=Unknown_Temple&veaction=edit&preload=Template:Create_article', 'folk_stories.html?temple=Unknown_Temple', 'https://example.com/languages_blank', 'fun_facts.html?temple=Unknown_Temple', 'https://www.example.com/images/Unknown_Temple');
-        } else if (type === 'villages') {
-          addMarker(12.2958, 76.6394, 'Village 1', 'https://en.wikipedia.org/wiki/Village_1', 'folk_stories.html?village=Village_1', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?village=Village_1', 'https://www.example.com/images/Village_1');
-          addMarker(11.0168, 76.9558, 'Village 2', 'https://en.wikipedia.org/wiki/Village_2', 'folk_stories.html?village=Village_2', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?village=Village_2', 'https://www.example.com/images/Village_2');
-        } else if (type === 'families') {
-          addMarker(11.0168, 76.9558, 'Family 1', 'https://en.wikipedia.org/wiki/Family_1', 'achievements.html?family=Family_1', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?family=Family_1', 'https://www.example.com/images/Family_1');
-          addMarker(10.8505, 76.2711, 'Family 2', 'https://en.wikipedia.org/wiki/Family_2', 'achievements.html?family=Family_2', 'https://en.wikipedia.org/wiki/Languages_of_Kerala', 'fun_facts.html?family=Family_2', 'https://www.example.com/images/Family_2');
-        }
-      }
-
-      window.submitHeritageInfo = function() {
-        const lastName = document.getElementById('lastName').value;
-        const gothra = document.getElementById('gothra').value;
-        const placeOfOrigin = document.getElementById('placeOfOrigin').value;
-
-        // Show markers only when all inputs are provided
-        if (lastName && gothra && placeOfOrigin) {
+      // Show markers only when all inputs are provided
+      if (lastName && gothra && placeOfOrigin) {
+        if (currentMode === '') {
+          alert('You must select a type of location (village, temple, or family) before submitting.');
+        } else {
           formSubmitted = true;
           showMarkers(currentMode);
-        } else {
-          alert('Please fill in all three inputs before submitting.');
         }
+      } else {
+        alert('Please fill in all three inputs before submitting.');
       }
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 </html>
+
+
