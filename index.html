@@ -23,7 +23,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;x
+      align-items: center;
       color: #fff;
       text-align: center;
     }
@@ -40,6 +40,7 @@
     .banner-text, .banner-summary {
       position: relative;
       z-index: 1;
+      color: #fff; /* Added to make the text white */
     }
     .banner-text {
       font-size: 3em;
@@ -148,8 +149,8 @@
     </div>
   </div>
   <div>
-  <div class="container">
-    <div id="map"></div>
+    <div class="container">
+      <div id="map"></div>
       <div class="form-container">
         <h2>Enter Your Heritage Information</h2>
         <form id="heritageForm">
@@ -224,7 +225,7 @@
     }
 
     function clearMarkers() {
-      markers.forEach(marker => {F
+      markers.forEach(marker => {
         map.removeLayer(marker);
       });
       markers = [];
@@ -269,3 +270,4 @@
 </script>
 </body>
 </html>
+
