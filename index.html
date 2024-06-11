@@ -6,6 +6,7 @@
   <title>KrishnaTheeram</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <style>
+    
     body, html {
       margin: 0;
       padding: 0;
@@ -40,7 +41,7 @@
     .banner-text, .banner-summary {
       position: relative;
       z-index: 1;
-      color: #fff; /* Added to make the text white */
+      color: #fff;
     }
     .banner-text {
       font-size: 3em;
@@ -170,10 +171,11 @@
     <span>YouTube</span>
     <span>Instagram</span>
   </div>
-  <div class = "spacer"> </div>
+  <div class="spacer"></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
+  // initializing the blank map of India, default loc mode is villages
   document.addEventListener('DOMContentLoaded', function () {
     const map = L.map('map').setView([20.5937, 78.9629], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -182,16 +184,18 @@
     let formSubmitted = false;
 
     window.setMode = function(type) {
+      // if user fills out everything and presses submit, show the specific markers that he chose
       currentMode = type;
       updateNavState(type);
       clearMarkers();
-      map.setView([20.5937, 78.9629], 5);
+      map.setView([20.5937, 78.9629],5);
       if (formSubmitted) {
         showMarkers(type);
       }
     };
 
     window.submitHeritageInfo = function() {
+      // this is for the form submisioon thing
       const lastName = document.getElementById('lastName').value;
       const gothra = document.getElementById('gothra').value;
       const placeOfOrigin = document.getElementById('placeOfOrigin').value;
@@ -204,6 +208,7 @@
     };
 
     function updateNavState(activeType) {
+      // for updating the marker type when user selects different button
       const navButtons = document.querySelectorAll('.nav-button');
       navButtons.forEach(button => {
         button.classList.remove('active');
@@ -212,6 +217,7 @@
     }
 
     function addMarker(lat, lng, title, wikiUrl, folkStoriesUrl, languagesUrl, funFactsUrl, imagesUrl) {
+      // adding the right type of markers to the map when the user has chosen the loc type & presses submit 
       const popupContent = `
           <b>${title}</b><br>
           <a href="${wikiUrl}" target="_blank">Wikipedia Page</a><br>
@@ -225,6 +231,7 @@
     }
 
     function clearMarkers() {
+      // for clearing markers
       markers.forEach(marker => {
         map.removeLayer(marker);
       });
@@ -232,6 +239,7 @@
     }
 
     function showMarkers(type) {
+      // conditions for what type of marker to show depending on what user chose
       clearMarkers();
       if (type === 'temples') {
         addMarker(12.9716, 77.5946, 'Sri Chennakesava Temple', 'https://en.wikipedia.org/wiki/Chennakesava_Temple,_Belur', 'folk_stories.html?temple=Chennakesava_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Chennakesava_Temple', 'https://www.example.com/images/Chennakesava_Temple');
@@ -253,6 +261,7 @@
     document.addEventListener('scroll', updateContactBarPosition);
 
     function updateContactBarPosition() {
+      // for contact bar, updating where its located based on how user scrolls through website
       const contactBar = document.querySelector('.contact-bar');
       const windowHeight = window.innerHeight;
       const contentHeight = document.body.clientHeight;
@@ -261,7 +270,7 @@
       if (windowHeight + scrollPosition >= contentHeight) {
         contactBar.style.bottom = '0';
       } else {
-        contactBar.style.bottom = '-50px'; 
+        contactBar.style.bottom = '-50px';
       }
     }
 
@@ -270,3 +279,4 @@
 </script>
 </body>
 </html>
+
