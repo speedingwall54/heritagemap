@@ -243,6 +243,7 @@
         addMarker(15.8281, 78.0373, 'Srisailam', 'https://en.wikipedia.org/wiki/Srisailam', 'folk_stories.html?village=Srisailam', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?village=Srisailam', 'https://www.example.com/images/Srisailam');
         addMarker(11.4100, 76.6953, 'Ooty', 'https://en.wikipedia.org/wiki/Ooty', 'folk_stories.html?village=Ooty', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?village=Ooty', 'https://www.example.com/images/Ooty');
         addMarker(11.4064, 76.6932, 'Coonoor', 'https://en.wikipedia.org/wiki/Coonoor', 'folk_stories.html?village=Coonoor', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?village=Coonoor', 'https://www.example.com/images/Coonoor');
+        addMarker(14.0853, 77.8036, 'Puttaparthi', 'https://en.wikipedia.org/wiki/Puttaparthi', 'folk_stories.html?village=Puttaparthi', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?village=Puttaparthi', 'https://www.example.com/images/Puttaparthi');
       } else if (type === 'families') {
         addMarker(10.8505, 76.2711, 'Family 1', 'https://en.wikipedia.org/wiki/Family_1', 'achievements.html?family=Family_1', 'https://en.wikipedia.org/wiki/Languages_of_Kerala', 'fun_facts.html?family=Family_1', 'https://www.example.com/images/Family_1');
         addMarker(11.0168, 76.9558, 'Family 2', 'https://en.wikipedia.org/wiki/Family_2', 'achievements.html?family=Family_2', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?family=Family_2', 'https://www.example.com/images/Family_2');
@@ -258,16 +259,14 @@
       const scrollPosition = window.scrollY;
 
       if (windowHeight + scrollPosition >= contentHeight) {
-        contactBar.style.bottom = '0'; // Stick to the bottom of the viewport
+        contactBar.style.bottom = '0';
       } else {
-        contactBar.style.bottom = '-50px'; // Hide below the bottom of the content
+        contactBar.style.bottom = '-50px'; 
       }
     }
 
-    // Set default mode to villages on load
     setMode('villages');
   });
 </script>
 </body>
 </html>
-
