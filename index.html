@@ -6,7 +6,6 @@
   <title>KrishnaTheeram</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <style>
-    
     body, html {
       margin: 0;
       padding: 0;
@@ -55,7 +54,6 @@
       justify-content: center;
       background-color: rgba(0, 0, 0, 0.7);
       padding: 20px;
-      width: 100%;
       position: sticky;
       top: 0;
       z-index: 1;
@@ -73,6 +71,24 @@
     .nav-container button.active, .nav-container button:hover {
       background-color: #4CAF50;
       color: #fff;
+    }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      background-color: #333;
+      padding: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .top-nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      transition: background-color 0.3s;
+    }
+    .top-nav a:hover {
+      background-color: #575757;
     }
     .container {
       display: flex;
@@ -138,7 +154,14 @@
 </head>
 <body>
 <div>
+  <div class="top-nav">
+    <a href="javascript:void(0)" onclick="window.location.reload()">KrishnaTheeram</a>
+    <a href="about.html" target="_blank">About</a>
+  </div>
   <div>
+    <div class="about-bar1">
+      <span>About</span>
+    </div>
     <div class="banner">
       <div class="banner-text"><strong> KrishnaTheeram </strong></div>
       <div class="banner-summary"><strong>Discover your Indian roots through an interactive map showcasing temples, villages, and families.</strong></div>
@@ -175,7 +198,6 @@
 </div>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-  // initializing the blank map of India, default loc mode is villages
   document.addEventListener('DOMContentLoaded', function () {
     const map = L.map('map').setView([20.5937, 78.9629], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -184,18 +206,16 @@
     let formSubmitted = false;
 
     window.setMode = function(type) {
-      // if user fills out everything and presses submit, show the specific markers that he chose
       currentMode = type;
       updateNavState(type);
       clearMarkers();
-      map.setView([20.5937, 78.9629],5);
+      map.setView([20.5937, 78.9629], 5);
       if (formSubmitted) {
         showMarkers(type);
       }
     };
 
     window.submitHeritageInfo = function() {
-      // this is for the form submisioon thing
       const lastName = document.getElementById('lastName').value;
       const gothra = document.getElementById('gothra').value;
       const placeOfOrigin = document.getElementById('placeOfOrigin').value;
@@ -208,7 +228,6 @@
     };
 
     function updateNavState(activeType) {
-      // for updating the marker type when user selects different button
       const navButtons = document.querySelectorAll('.nav-button');
       navButtons.forEach(button => {
         button.classList.remove('active');
@@ -217,21 +236,20 @@
     }
 
     function addMarker(lat, lng, title, wikiUrl, folkStoriesUrl, languagesUrl, funFactsUrl, imagesUrl) {
-      // adding the right type of markers to the map when the user has chosen the loc type & presses submit 
       const popupContent = `
           <b>${title}</b><br>
           <a href="${wikiUrl}" target="_blank">Wikipedia Page</a><br>
           <a href="${folkStoriesUrl}" target="_blank">Folk Stories</a><br>
-          <a href="${languagesUrl}" target="_blank">Common Languages</a><br>
+          <a href="${languagesUrl}" target="_blank">Languages</a><br>
           <a href="${funFactsUrl}" target="_blank">Fun Facts</a><br>
           <a href="${imagesUrl}" target="_blank">Images</a>
-        `;
-      const marker = L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
+      `;
+      const marker = L.marker([lat, lng]).bindPopup(popupContent);
+      marker.addTo(map);
       markers.push(marker);
     }
 
     function clearMarkers() {
-      // for clearing markers
       markers.forEach(marker => {
         map.removeLayer(marker);
       });
@@ -239,44 +257,16 @@
     }
 
     function showMarkers(type) {
-      // conditions for what type of marker to show depending on what user chose
       clearMarkers();
-      if (type === 'temples') {
-        addMarker(12.9716, 77.5946, 'Sri Chennakesava Temple', 'https://en.wikipedia.org/wiki/Chennakesava_Temple,_Belur', 'folk_stories.html?temple=Chennakesava_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Chennakesava_Temple', 'https://www.example.com/images/Chennakesava_Temple');
-        addMarker(13.0827, 80.2707, 'Kapaleeshwarar Temple', 'https://en.wikipedia.org/wiki/Kapaleeshwarar_Temple', 'folk_stories.html?temple=Kapaleeshwarar_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?temple=Kapaleeshwarar_Temple', 'https://www.example.com/images/Kapaleeshwarar_Temple');
-        addMarker(15.3173, 75.7139, 'Virupaksha Temple', 'https://en.wikipedia.org/wiki/Virupaksha_Temple', 'folk_stories.html?temple=Virupaksha_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Karnataka', 'fun_facts.html?temple=Virupaksha_Temple', 'https://www.example.com/images/Virupaksha_Temple');
-        addMarker(16.5000, 80.6400, 'Simhachalam Temple', 'https://en.wikipedia.org/wiki/Simhachalam_Temple', 'folk_stories.html?temple=Simhachalam_Temple', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?temple=Simhachalam_Temple', 'https://www.example.com/images/Simhachalam_Temple');
-      } else if (type === 'villages') {
-        addMarker(16.3908, 78.4416, 'Kuchipudi', 'https://en.wikipedia.org/wiki/Kuchipudi', 'folk_stories.html?village=Kuchipudi', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?village=Kuchipudi', 'https://www.example.com/images/Kuchipudi');
-        addMarker(15.8281, 78.0373, 'Srisailam', 'https://en.wikipedia.org/wiki/Srisailam', 'folk_stories.html?village=Srisailam', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?village=Srisailam', 'https://www.example.com/images/Srisailam');
-        addMarker(11.4100, 76.6953, 'Ooty', 'https://en.wikipedia.org/wiki/Ooty', 'folk_stories.html?village=Ooty', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?village=Ooty', 'https://www.example.com/images/Ooty');
-        addMarker(11.4064, 76.6932, 'Coonoor', 'https://en.wikipedia.org/wiki/Coonoor', 'folk_stories.html?village=Coonoor', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?village=Coonoor', 'https://www.example.com/images/Coonoor');
-        addMarker(14.0853, 77.8036, 'Puttaparthi', 'https://en.wikipedia.org/wiki/Puttaparthi', 'folk_stories.html?village=Puttaparthi', 'https://en.wikipedia.org/wiki/Languages_of_Andhra_Pradesh', 'fun_facts.html?village=Puttaparthi', 'https://www.example.com/images/Puttaparthi');
+      if (type === 'villages') {
+        addMarker(9.9312, 76.2673, 'Village 1', 'https://en.wikipedia.org/wiki/Example_Village_1', 'https://folkstories.com/example_village_1', 'https://languages.com/example_village_1', 'https://funfacts.com/example_village_1', 'https://images.com/example_village_1');
+      } else if (type === 'temples') {
+        addMarker(10.8505, 76.2711, 'Temple 1', 'https://en.wikipedia.org/wiki/Example_Temple_1', 'https://folkstories.com/example_temple_1', 'https://languages.com/example_temple_1', 'https://funfacts.com/example_temple_1', 'https://images.com/example_temple_1');
       } else if (type === 'families') {
-        addMarker(10.8505, 76.2711, 'Family 1', 'https://en.wikipedia.org/wiki/Family_1', 'achievements.html?family=Family_1', 'https://en.wikipedia.org/wiki/Languages_of_Kerala', 'fun_facts.html?family=Family_1', 'https://www.example.com/images/Family_1');
-        addMarker(11.0168, 76.9558, 'Family 2', 'https://en.wikipedia.org/wiki/Family_2', 'achievements.html?family=Family_2', 'https://en.wikipedia.org/wiki/Languages_of_Tamil_Nadu', 'fun_facts.html?family=Family_2', 'https://www.example.com/images/Family_2');
+        addMarker(12.9716, 77.5946, 'Family 1', 'https://en.wikipedia.org/wiki/Example_Family_1', 'https://folkstories.com/example_family_1', 'https://languages.com/example_family_1', 'https://funfacts.com/example_family_1', 'https://images.com/example_family_1');
       }
     }
-
-    document.addEventListener('scroll', updateContactBarPosition);
-
-    function updateContactBarPosition() {
-      // for contact bar, updating where its located based on how user scrolls through website
-      const contactBar = document.querySelector('.contact-bar');
-      const windowHeight = window.innerHeight;
-      const contentHeight = document.body.clientHeight;
-      const scrollPosition = window.scrollY;
-
-      if (windowHeight + scrollPosition >= contentHeight) {
-        contactBar.style.bottom = '0';
-      } else {
-        contactBar.style.bottom = '-50px';
-      }
-    }
-
-    setMode('villages');
   });
 </script>
 </body>
 </html>
-
