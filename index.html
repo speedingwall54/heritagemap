@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KrishnaTheeram</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     body, html {
       margin: 0;
@@ -80,14 +81,17 @@
       border-radius: 20px;
       position: relative;
       z-index: 0;
+      margin-bottom: 20px;
     }
     #about {
       padding: 20px;
       background-color: #fff;
-      margin-top: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      font-size: 1.2em; /* Smaller font size for About Us content */
+      font-size: 1.2em;
+      width: 80%;
+      text-align: left;
+      margin-bottom: 20px;
     }
     .contact-bar {
       background-color: #45a049;
@@ -138,6 +142,8 @@
       margin-top: 20px;
       display: flex;
       align-items: center;
+      width: 80%;
+      position: relative;
     }
     .search-container input[type=text] {
       padding: 10px;
@@ -179,6 +185,30 @@
     .selected {
       border: 2px solid #45a049;
     }
+    .village-list {
+      width: 80%;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .village-list h2 {
+      margin-top: 0;
+    }
+    .village-list ul {
+      list-style: none;
+      padding: 0;
+      columns: 2;
+    }
+    .village-list ul li {
+      margin-bottom: 10px;
+      cursor: pointer;
+      color: #45a049;
+    }
+    .village-list ul li:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -189,7 +219,7 @@
   </div>
   <div class="nav-container">
     <a href="#" onclick="smoothScroll('#home')">Home</a>
-    <a href="#" onclick="smoothScroll('#about')">About</a>
+    <a href="#" onclick="smoothScroll('#about')">About Us</a>
   </div>
 </div>
 <div class="container" id="home">
@@ -204,22 +234,37 @@
     <div class="examples">
       <p>Not sure where to start? Here are some examples:</p>
       <ul>
-        <li>Search for <strong>Saipuram</strong> to explore a historic village.</li>
-        <li>Discover the <strong>Narasimha Swamy Temple</strong> to learn about ancient temples.</li>
+        <li>Search for <strong>Machilipatnam</strong> to explore a historic village.</li>
+        <li>Discover <strong>Gudivada</strong> to learn about ancient temples.</li>
         <li>Find information about <strong>your family's ancestral village</strong> to connect with your roots.</li>
+        <li>Explore <strong>Saipuram</strong> to see a specific marker on the map.</li>
       </ul>
     </div>
   </div>
   <div class="search-container">
-    <input type="text" id="search-input" placeholder="Search for a place...">
-    <button onclick="handleSearch()">Search</button>
+    <input type="text" id="searchInput" placeholder="Enter place name...">
+    <button onclick="searchPlace()">Search</button>
   </div>
   <div class="search-type-buttons">
-    <button id="villageButton" onclick="handleButtonClick('village')">Village</button>
-    <button id="templeButton" onclick="handleButtonClick('temple')">Temple (Beta)</button>
-    <button id="familyButton" onclick="handleButtonClick('family')">Family (Beta)</button>
+    <button id="villageBtn" class="selected" onclick="switchSearchMode('village')">Village</button>
+    <button id="templeBtn" onclick="switchSearchMode('temple')">Temple (Beta)</button>
+    <button id="familyBtn" onclick="switchSearchMode('family')">Family (Beta)</button>
   </div>
   <div id="map"></div>
+  <div class="village-list">
+    <h2>Village List</h2>
+    <ul id="villageList">
+      <li onclick="highlightVillage('Machilipatnam')">Machilipatnam</li>
+      <li onclick="highlightVillage('Gudivada')">Gudivada</li>
+      <li onclick="highlightVillage('Nuzvid')">Nuzvid</li>
+      <li onclick="highlightVillage('Saipuram')">Saipuram</li>
+      <li onclick="highlightVillage('Jaggayyapeta')">Jaggayyapeta</li>
+      <li onclick="highlightVillage('Gannavaram')">Gannavaram</li>
+      <li onclick="highlightVillage('Pedana')">Pedana</li>
+      <li onclick="highlightVillage('Gudlavalleru')">Gudlavalleru</li>
+      <li onclick="highlightVillage('Kaikalur')">Kaikalur</li>
+    </ul>
+  </div>
   <div id="about">
     <h2>About Us</h2>
     <p>
@@ -228,81 +273,124 @@
       Parampara, a Sanskrit term signifying an unbroken lineage of knowledge transmission, offers a powerful methodology for the continuous refinement of wisdom. It transcends the limitations of a single human lifespan, enabling the accumulation and evolution of knowledge across generations. This wisdom flourishes in Agraharas, communities where individuals dedicated to Parampara live and collaborate for the greater good. Here, knowledge is debated, challenged, and ultimately distilled into wisdom, guiding individuals towards better lifestyles and fostering excellence of humanity.<br><br>
       <strong>The Shifting Landscape: Challenges to the Traditional Model</strong><br><br>
       The rise of industrialization and globalization ushered in a paradigm shift. The allure of material wealth creation spurred societal changes. The once-cohesive joint family structure fragmented into nuclear families, weakening the social fabric of closely-knit communities. Exposure to diverse cultures, particularly Western ideals emphasizing material wealth as the ultimate goal, further eroded the traditional Agrahara-Parampara model.<br><br>
-      While modern advancements have undeniably improved living conditions, they also led to the detachment of the younger generation from their cultural roots, often unaware of the profound wisdom embedded in their traditional heritage.<br><br>
+      While the pursuit of material wealth and exploration of diverse knowledge systems are not inherently harmful, they often prioritize individualistic endeavors. This focus may diverge from the natural path of wisdom acquisition, which evidently is enriched through collective means. Consequently, this divergence can diminish the overall quality of wisdom attained.<br><br>
       <strong>Reviving the Model in the Digital Age</strong><br><br>
-      Despite these challenges, the essence of Agraharas and Parampara remains relevant in the modern world. They serve as reservoirs of timeless wisdom, offering pathways to balance and holistic well-being.<br><br>
+      The relevance of Agraharas and Parampara in the contemporary world cannot be overstated. Younger generations, amidst the fast-paced world, often lack a place to connect with their roots and validate their inherited wisdom.<br><br>
+      The goal of reviving this paradigm is to leverage technology to bridge the geographical dispersion and empower younger generations to participate in the continuous evolution of wisdom. This approach seeks to build upon the time-tested methodologies of Parampara while incorporating the benefits of technology.<br><br>
       <strong>A Modern Approach: A Digital Platform for Rediscovery</strong><br><br>
-      Recognizing the need to reconnect with our roots, KrishnaTheeram provides a user-friendly platform. It caters to those curious about their heritage, linking them to their ancestral villages, temples, and families. Through this platform, individuals rediscover their place of origin, connect with their ancestors, and explore the wisdom of Parampara. By fostering community and promoting knowledge exchange, KrishnaTheeram aims to revive the spirit of Agraharas in the digital age.<br><br>
-      <strong>Join Us on This Journey</strong><br><br>
-      Let us embark on this transformative journey together, preserving, promoting, and propagating the timeless wisdom encapsulated in Agrahara-Parampara.<br><br>
+      We propose a user-friendly platform that caters to the inquisitive minds seeking to reconnect with their roots. This platform will:<br><br>
+    <ul>
+      <li><strong>Facilitate Self-Discovery:</strong> Function as a space for individuals to explore their heritage, connecting them with their place of origin, ancestors, and the Parampara they belong to.</li>
+      <li><strong>Foster Connection:</strong> Enable users to connect with others of similar backgrounds, fostering a sense of community and belonging.</li>
+      <li><strong>Promote Knowledge Exchange:</strong> Provide forums for debates and discussions, allowing individuals to rediscover themselves through intellectual discourse, both online and at physical Agraharas.</li>
+    </ul>
+    <strong>Technical Framework</strong><br><br>
+    The platform will be featuring:<br><br>
+    <ul>
+      <li><strong>Intuitive Web Interface:</strong> A user-friendly interface that facilitates easy navigation and exploration.</li>
+      <li><strong>Search Functionality:</strong> A search engine enabling users to delve into their genealogy and connect with others.</li>
+      <li><strong>Self-Curated Content System:</strong> Empowering users to curate and share their personal realizations and experiences, enriching the collective wisdom.</li>
+      <li><strong>Social Networking Integration:</strong> Seamless integration with social networking platforms to expand reach and foster community building.</li>
+    </ul>
+    By reviving the Agrahara-Parampara model in the digital age, younger generations can be empowered to connect with their roots, participate in the ongoing refinement of knowledge, and contribute to a future built upon wisdom. This revival has the potential to bridge the divides within society and steer humanity towards a more sustainable and harmonious future.
     </p>
   </div>
+  <div class="spacer"></div>
 </div>
-<div class="spacer"></div>
 <div class="contact-bar">
-  <a href="https://www.facebook.com">Facebook</a>
-  <a href="https://www.instagram.com">Instagram</a>
-  <a href="https://www.linkedin.com">LinkedIn</a>
-  <a href="https://wa.me/1234567890">WhatsApp</a> 
+  <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+  <a href="https://www.whatsapp.com" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+  <a href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script>
-  var map = L.map('map', {
-    center: [16.5139, 80.6327], // Centered on Vijayawada
-    zoom: 13,
-    maxBounds: L.latLngBounds(L.latLng(16.3, 80.4), L.latLng(16.8, 80.8)), // Restrict map bounds
-    maxZoom: 18,
-    minZoom: 12,
+  const map = L.map('map', {
+    center: [16.5, 81.0], // Adjusted center to fit all markers
+    zoom: 9, // Adjusted zoom level to fit all markers
+    scrollWheelZoom: false
   });
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
+    maxZoom: 15,
+    minZoom: 8,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
-  var villageMarker;
+  const locations = [
+    { name: "Machilipatnam", lat: 16.1785, lng: 81.1309, url: "https://en.wikipedia.org/wiki/Machilipatnam" },
+    { name: "Gudivada", lat: 16.4421, lng: 80.9925, url: "https://en.wikipedia.org/wiki/Gudivada" },
+    { name: "Nuzvid", lat: 16.7881, lng: 80.8465, url: "https://en.wikipedia.org/wiki/Nuzvid" },
+    { name: "Saipuram", lat: 16.7833, lng: 81.1333, url: "https://en.wikipedia.org/wiki/Saipuram" },
+    { name: "Jaggayyapeta", lat: 16.8938, lng: 80.0974, url: "https://en.wikipedia.org/wiki/Jaggayyapeta" },
+    { name: "Gannavaram", lat: 16.5403, lng: 80.8014, url: "https://en.wikipedia.org/wiki/Gannavaram" },
+    { name: "Pedana", lat: 16.2554, lng: 81.1435, url: "https://en.wikipedia.org/wiki/Pedana" },
+    { name: "Gudlavalleru", lat: 16.3476, lng: 81.0458, url: "https://en.wikipedia.org/wiki/Gudlavalleru" },
+    { name: "Kaikalur", lat: 16.5512, lng: 81.2144, url: "https://en.wikipedia.org/wiki/Kaikalur" }
+  ];
 
-  function handleSearch() {
-    var input = document.getElementById('search-input').value;
-    if (input.toLowerCase() === 'saipuram') {
-      if (!villageMarker) {
-        villageMarker = L.marker([16.5139, 80.6327]).addTo(map); // Adding marker only if it doesn't exist
-        villageMarker.on('click', function() {
-          window.location.href = 'saipuram.html'; // Redirect to saipuram.html on marker click
+  const markers = locations.map(location => {
+    const marker = L.marker([location.lat, location.lng]).addTo(map);
+    marker.bindPopup(`<a href="${location.url}" target="_blank">${location.name}</a>`);
+    return marker;
+  });
+
+  const group = new L.featureGroup(markers);
+  map.fitBounds(group.getBounds());
+
+  function switchSearchMode(mode) {
+    const villageBtn = document.getElementById('villageBtn');
+    const templeBtn = document.getElementById('templeBtn');
+    const familyBtn = document.getElementById('familyBtn');
+
+    villageBtn.classList.remove('selected');
+    templeBtn.classList.remove('selected');
+    familyBtn.classList.remove('selected');
+
+    if (mode === 'village') {
+      villageBtn.classList.add('selected');
+    } else {
+      alert(`${mode.charAt(0).toUpperCase() + mode.slice(1)} feature is currently in Beta`);
+      if (mode === 'temple') {
+        templeBtn.classList.add('selected');
+      } else {
+        familyBtn.classList.add('selected');
+      }
+    }
+  }
+
+  function searchPlace() {
+    const input = document.getElementById('searchInput').value.trim().toLowerCase(); // Trim whitespace and convert to lowercase
+    const selectedType = document.querySelector('.search-type-buttons .selected').id.replace('Btn', '');
+    const foundLocation = locations.find(location => location.name.toLowerCase() === input);
+
+    if (foundLocation) {
+      if (selectedType === 'village' || (selectedType === 'temple' && foundLocation.name.includes('temple')) || (selectedType === 'family' && foundLocation.name.includes('family'))) {
+        map.setView([foundLocation.lat, foundLocation.lng], 12);
+        markers.forEach(marker => {
+          if (marker.getLatLng().equals([foundLocation.lat, foundLocation.lng])) {
+            marker.openPopup(); // Open popup for the found marker
+          }
         });
+      } else {
+        alert('Invalid input for selected type, please try again.');
       }
     } else {
-      alert("No results found for '" + input + "'. Please try again.");
+      alert('Invalid input, please try again with a valid village name.');
     }
   }
 
-  function handleButtonClick(type) {
-    if (type === 'village') {
-      document.getElementById('search-input').placeholder = 'Search for a village...';
-      highlightButton('villageButton');
-    } else if (type === 'temple') {
-      alert('Temple search is currently in progress (Beta).');
-      highlightButton('templeButton');
-    } else if (type === 'family') {
-      alert('Family search is currently in progress (Beta).');
-      highlightButton('familyButton');
+  function highlightVillage(village) {
+    const location = locations.find(loc => loc.name === village);
+    if (location) {
+      map.setView([location.lat, location.lng], 12);
     }
   }
 
-  function highlightButton(buttonId) {
-    var buttons = document.getElementsByClassName('search-type-buttons')[0].getElementsByTagName('button');
-    for (var i = 0; i < buttons.length; i++) {
-      buttons[i].classList.remove('selected');
-    }
-
-    document.getElementById(buttonId).classList.add('selected');
-  }
   function smoothScroll(target) {
-    document.querySelector(target).scrollIntoView({
-      behavior: 'smooth'
-    });
+    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
   }
 </script>
 </body>
 </html>
+
